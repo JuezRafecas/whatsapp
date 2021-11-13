@@ -2,7 +2,7 @@
 //Aca comienza el scrip!
 //TODO: Guardar pedido en sessionStorage, para hacerlo 1 vez por sesion
 const store_id = '512332125';
-fetch(`http://localhost:8080/api/fullchat/${store_id}`)
+fetch(`https://flowy-whatsapp.herokuapp.com/api/fullchat/${store_id}`)
     .then(response => response.json())
     .then(response => {
         const store = response;
