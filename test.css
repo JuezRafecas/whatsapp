@@ -1,22 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 /*********RESET****************/
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-}
 /**********BOTON CHAT***********/
 @-webkit-keyframes pulse {
     0% {
@@ -59,10 +42,7 @@ time, mark, audio, video {
       box-shadow: 0 0 0 0 rgba(25, 176, 12, 0);
     }
   }
-  ::-webkit-scrollbar {
-    width: 0;  /* Remove scrollbar space */
-    background: transparent;  /* Optional: just make scrollbar invisible */
-}
+  
   a.whatsapp {
     background: #19b00c;
     color: white;
@@ -143,21 +123,17 @@ time, mark, audio, video {
     padding: 2em 1em 1em 1em;
     width: 100vw;
     position: relative;
-    height: 10vh;
+    height: 5vh;
   }
 
   .flowy-chat-header h1{
     font-size: 1.5em;
     padding-bottom: 0.5em;
-    font-weight: 600;
   }
-  .fa-times{
-    position: absolute;
-    top: 1em;
-    right: 1em;
-    color: #ffffff;
-    font-size: 1.2em;
+  .flowy-chat-header p{
+    font-size: 1.1em;
   }
+
 
   /*********POWERED CHAT**********/
   .flowy-chat-footer{
@@ -169,7 +145,6 @@ time, mark, audio, video {
     font-size: 0.8em;
     position: absolute;
     bottom: 0em;
-    z-index: 11;
   }
   .flowy-chat-footer a,
   .flowy-chat-footer a:hover,
@@ -224,7 +199,7 @@ time, mark, audio, video {
 .flowy-chat-item-store, .flowy-chat-item-client{
   color: #000;
   background-color: #F9F9F9;
-  font-size: 0.9em;
+  font-size: 1em;
   border-radius: 0.5em;
   padding: 0.5em;
   width: fit-content;
@@ -282,48 +257,6 @@ time, mark, audio, video {
     height: 30px;
     transform: rotate(45deg) scaleY(-1);
 }
-.flowy-chat-item-store i {
-  color: #6E6E6E;
-  font-size: 0.9em;
-  font-weight: 400;
-}
-.flowy-chat-employee-item{
-  max-width: 90vw;
-  position: relative;
-  margin: 0.2em 0em;
-  padding-left: 2.7em;
-  font-weight: 500;
-  cursor: pointer;
-}
-.flowy-chat-employee-item::after{
-    position: absolute;
-    left: 0em;
-    content: '';
-    bottom: 0em;
-    border: 0 solid transparent;
-    border-top: 0px solid #F9F9F9;
-    border-radius: 0 0px 0;
-    width: 0px;
-    height: 0px;
-    transform: rotate(
-145deg);
-}
-.flowy-chat-employee-item img{
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: 50%;
-  position: absolute;
-  left: -0.5em;
-  top: -0.3em;
-  z-index: 10;
-  border: 2px solid white;
-  box-shadow: 2px 4px 10px darkgray;
-}
-.flowy-employee-unavailable{
-  color: #6E6E6E !important;
-  font-weight: 400 !important;
-}
-
 .flowy-store-avatar{
   width: 2.7em;
   height: auto;
@@ -346,74 +279,9 @@ p.flowy-choice-option{
 }
 /*****CSS HELPERS******/
 .flowy-no-visible{
-  display: none !important;
+  display: none;
 }
 
-/******Employee main chat**********/
-.flowy-employee-main-header{
-  display: flex;
-  gap: 1em;
-  align-items: center;
-  padding: 0.5em;
-}
-.flowy-employee-main-chat{
-  display: flex;
-  gap: 1em;
-  align-items: center;
-}
-.flowy-employee-main-header .fa-chevron-left{
-  font-size: 1.8em;
-  color: #ffffff;
-  cursor: pointer;
-}
-.flowy-employee-main-chat-avatar{
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 50%;
-}
-.flowy-employee-main-chat-data{
-  display: flex;
-  flex-direction: column;
-  gap: 0.2em;
-}
-.flowy-employee-main-chat-name{
-  font-size: 1.5em;
-}
-.flowy-employee-main-chat-role{
-  font-size: 0.9em;
-}
-
-/****INPUT CHAT******/
-.flowy-send{
-  position: absolute;
-  bottom: 3em;
-  left: 1em;
-  display: flex;
-  align-items: center;
-}
-.flowy-send .flowy-send-div{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.2em 0.5em;
-  border: none;
-  border-radius: 0em 0.5em 0.5em 0em;
-  background-color: #638EB4;
-  height: 2em;
-  box-shadow: 0px 4px 10px darkgray;
-}
-.flowy-send-div i{
-  color: #F9F9F9;
-  font-size: 0.9em;
-}
-.flowy-send input{
-    width: 80vw;
-    border: none;
-    border-radius: 0.5em 0em 0em 0.5em;
-    box-shadow: 0px 4px 10px darkgrey;
-    padding: 0.25em;
-    padding-left: 1em;
-}
 @media screen and (min-width: 700px) {
   .flowy-chat-whatsapp{
     height: 530px;
@@ -423,28 +291,19 @@ p.flowy-choice-option{
   }
   .flowy-chat-header{
     border-radius: 1em 1em 0em 0em;
-    width: 100%;
-  }
-  .fas.fa-times{
-    display: none;
+    width: 96%;
   }
   .flowy-chat-body{
     width: 100%;
-    height: 437px;
+    height: 370px;
   }
   .flowy-chat-item-store, .flowy-chat-item-client{
     max-width: 230px;
   }
-  .flowy-chat-employee-item{
-    max-width: 320px;
-  }
   .flowy-chat-footer{
-    max-width: 350px;
+    max-width: 366px;
     border-radius: 0em 0em 1em 1em;
     align-self: center;
-  }
-  .flowy-send input{
-    max-width: 290px;
   }
   
 }

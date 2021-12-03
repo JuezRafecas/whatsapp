@@ -1,0 +1,179 @@
+.users
+    display: flex
+    flex-direction: column
+    gap: 2em
+    padding-top: 3em
+
+.user
+    display: flex
+    justify-content: space-between
+    align-items: center
+    width: 60vw
+    border: none
+    border-radius: 1em
+    box-shadow: 2px 4px 4px darkgray
+    padding: 1em 2em
+    background: $cl-gray
+    border-left: 1.5em solid #5F5F5F
+    div
+        display: flex
+        gap: 2em
+        align-items: center
+        img
+            width: 5em
+            height: 5em
+            border-radius: 50%
+        div
+            display: flex
+            flex-direction: column
+            gap: 0.5em
+            align-items: flex-start
+            h2
+                font-weight: 500
+            p
+                font-size: 1.3em
+        i
+            font-size: 2em
+            color: #5F5F5F
+            cursor: pointer
+
+div.ssc-circle
+    width: 5em
+    height: 5em
+div .ssc-head-line
+    width: 10em
+    height: 2rem
+
+.add-user
+    display: flex
+    align-items: center
+    justify-content: center
+    cursor: pointer
+    box-shadow: 2px 4px 4px darkgray
+    border: none
+    border-radius: 0.25em
+    font-size: 6em
+    padding: 0em
+    width: 1em
+    height: 1em
+    background: #5F5F5F
+    color: $cl-white
+    position: relative
+    left: 0.2em
+
+.user-modal
+    display: none
+    position: fixed
+    top: 1em
+    left: 35vw
+    border: none
+    border-radius: 1em
+    box-shadow: 2px 4px 4px darkgray
+    background: $cl-white
+    height: 45em
+    max-height: 96vh
+    width: 40em
+    overflow: auto
+    z-index: 1
+    form
+        display: flex
+        flex-direction: column
+        gap: 1em
+        padding: 3em 3em 1em 3em
+        h3
+            padding-bottom: 1em
+        input, textarea
+            border-radius: 0.5rem
+            box-shadow: 1px 2px 2px darkgray
+            border: 1px solid $cl-black
+            height: 2rem
+            font-size: 1.2rem
+            padding-left: 1rem
+        textarea
+            height: 5em
+            resize: none
+        div
+            display: flex
+            gap: 1em
+            div
+                width: 60%
+                display: flex
+                flex-direction: column
+                gap: 1em
+            .user-prefix
+                width: 13%
+            .user-phone
+                width: 87%
+            .user-image
+                width: 40%
+            .user-image-div
+                background: $cl-gray
+                height: 7em
+                width: 13em
+                border: none
+                border-radius: 1em
+                box-shadow: 1px 2px 2px darkgray
+                display: flex
+                flex-direction: column
+                justify-content: center
+                gap: 0.4em
+                align-items: center
+                img
+                    border-radius: 50%
+                    width: 5em
+                    height: 5em
+                p
+                    font-size: 0.7em
+        .user-schedule, .user-out-schedule
+            border: 1px solid $cl-black
+            border-radius: 0.5em
+            padding: 1em
+            display: flex
+            justify-content: space-between
+            align-items: center
+            box-shadow: 1px 2px 2px darkgray
+        .user-schedule
+            flex-direction: column
+        .user-schedule-title
+            display: flex
+            flex-direction: row
+            justify-content: space-between
+            cursor: pointer
+            width: 100%
+        .user-schedule-times
+            display: none
+            //display: flex
+            flex-direction: column
+            gap: 0.5rem
+            width: 100%
+            strong
+                padding-bottom: 0.5rem
+            div
+                display: flex
+                flex-direction: row
+                justify-content: space-between
+                width: 100%
+                label
+                    &:not(.switch)
+                        display: flex
+                        flex-direction: row
+                        align-items: center
+        .user-button
+            padding: 0.5em 1em
+            border-radius: 0.5em
+            border: none
+            box-shadow: 1px 2px 2px darkgray
+            font-size: 1.2rem
+            color: $cl-white
+            cursor: pointer
+        .save
+            background: $cl-light-blue
+        .cancel
+            background: $cl-gray
+            color: $cl-black
+
+        label
+            display: flex
+            flex-direction: column
+            gap: 0.3rem
+        

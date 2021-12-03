@@ -1,0 +1,42 @@
+$cl-turq: #489ac5
+$cl-light-blue: #7db5d4
+$cl-blue: #003160
+$cl-black: #363636
+$cl-white: #fff
+$cl-gray: #E5E5E5
+$cl-green: #19b00c
+$cl-red: #e91818
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+body
+    box-sizing: border-box
+    margin: 0
+    padding: 0
+    font-family: 'Montserrat', sans-serif
+    overflow-x: hidden
+    display: grid
+    grid-auto-columns: 1fr
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr
+    grid-template-areas: "aside header header header header""aside main main main main""aside main main main main""aside main main main main""aside main main main main""aside main main main main"
+
+aside
+    grid-area: aside
+
+header
+    grid-area: header
+
+main
+    grid-area: main
+a
+    text-decoration: none
+    outline: none
+    &:hover,
+    &:visited,
+    &:focus,
+    &:link,
+    &:active
+        outline: none
+        text-decoration: none
+h1,h2,h3,h4,h5,p
+    margin: 0
+    padding: 0

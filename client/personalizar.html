@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsPRO</title>
+    <script src="https://kit.fontawesome.com/bf494318ac.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/personalize.css">
+    <link rel="stylesheet" href="/node_modules/skeleton-screen-css/dist/index.min.css" />
+    <link rel="stylesheet" href="css/toggle.css">
+</head>
+
+<body>
+    <header>
+        <h1>WhatsPRO</h1>
+        <nav>
+            <ul>
+                <li>
+                    <i class="fas fa-bullhorn"></i>
+                    <a href="">Novedades</a>
+                </li>
+                <li>
+                    <i class="far fa-user"></i>
+                    <a href="">Mi cuenta</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <aside>
+        <img src="img/FLOWY LOGO.png" alt="Logo Flowy">
+        <h3>Nombre tienda</h3>
+        <ul>
+            <li>
+                <i class="fas fa-home"></i>
+                <a href="">Inicio</a>
+            </li>
+            <li>
+                <i class="fas fa-sliders-h"></i>
+                <a href="">Personalizar</a>
+            </li>
+            <li>
+                <i class="fas fa-info-circle"></i>
+                <a href="">Ayuda</a>
+            </li>
+            <li>
+                <i class="fas fa-lightbulb"></i>
+                <a href="">Sugerencias</a>
+            </li>
+        </ul>
+    </aside>
+    <main>
+        <div class="personalize-buttons">
+            <button class="user-button">Usuarios</button>
+            <button class="chat-button">Chat</button>
+            <button class="advanced-button">Avanzado</button>
+        </div>
+        <section class="users">
+            <article class="user">
+                <div>
+                    <!-- <img class="user-avatar" src="img/banner.png" alt="User name"> -->
+                    <div class="ssc-circle"></div>
+                    <div>
+                        <h2 class="ssc-head-line"></h2>
+                        <p class="ssc-head-line"></p>
+                        <!-- <h2 class="user-name">Paco gonzales</h2>
+                        <p class="user-role">Cargo</p> -->
+                    </div>
+                </div>
+                <div>
+                    <label class="switch">
+                        <input class="user-active" type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                    <i class="far fa-edit user-edit"></i>
+                </div>
+            </article>
+            <div class="add-user">+</div>
+            <article class="user-modal">
+                <form class="add-user-form">
+                    <h3>Editar usuario</h3>
+                    <div>
+                        <div>
+                            <label for="">Nombre
+                                <input type="text" name="" id="">
+                            </label>
+                            <label for="">Cargo
+                                <input type="text" name="" id="">
+                            </label>
+                        </div>
+                        <label class="user-image" for="">Foto de perfil
+                            <div class="user-image-div">
+                                <img src="img/avatar.png" alt="Avatar Empleado">
+                                <p>Avatar</p>
+                            </div>
+                        </label>
+                    </div>
+                    <div>
+                        <label class="user-prefix" for="">Prefijo
+                            <input type="text">
+                        </label>
+                        <label class="user-phone" for="">Número de Teléfono
+                            <input type="text">
+                        </label>
+                    </div>
+                    <div class="user-schedule">
+                        <div class="user-schedule-title"> 
+                            <p>Horarios de atención</p>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="user-schedule-times">
+                            <label for=""><strong>Lunes</strong>
+                                <div>
+                                    <label class="switch">
+                                        <input class="user-active" type="checkbox" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <label for="">Desde
+                                        <input type="time">
+                                    </label>
+                                    <label for="">Hasta
+                                        <input type="time">
+                                    </label>
+                                </div>
+                            </label>
+                            <label for=""><strong>Lunes</strong>
+                                <div>
+                                    <label class="switch">
+                                        <input class="user-active" type="checkbox" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <label for="">Desde
+                                        <input type="time">
+                                    </label>
+                                    <label for="">Hasta
+                                        <input type="time">
+                                    </label>
+                                </div>
+                            </label>
+                            <label for=""><strong>Lunes</strong>
+                                <div>
+                                    <label class="switch">
+                                        <input class="user-active" type="checkbox" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <label for="">Desde
+                                        <input type="time">
+                                    </label>
+                                    <label for="">Hasta
+                                        <input type="time">
+                                    </label>
+                                </div>
+                            </label>
+                            <label for=""><strong>Lunes</strong>
+                                <div>
+                                    <label class="switch">
+                                        <input class="user-active" type="checkbox" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <label for="">Desde
+                                        <input type="time">
+                                    </label>
+                                    <label for="">Hasta
+                                        <input type="time">
+                                    </label>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <label for="">Mensaje fuera de horario de atención
+                        <textarea name="" id="" cols="30" rows="30"></textarea>
+                    </label>
+                    <div class="user-out-schedule">
+                        <p>Permitir mensajes fuera del horario de atención</p>
+                        <label class="switch">
+                            <input class="user-active" type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="user-buttons">
+                        <button class="user-button save">Guardar</button>
+                        <button class="user-button cancel">Cancelar</button>
+                    </div>
+                </form>
+            </article>
+        </section>
+    </main>
+    <script src="js/user.js"></script>
+</body>
+
+</html>

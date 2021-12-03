@@ -1,31 +1,46 @@
 
 //Aca comienza el scrip!
-//TODO: Guardar pedido en sessionStorage, para hacerlo 1 vez por sesion
 const store_id = '512332125';
-fetch(`https://flowy-whatsapp.herokuapp.com/api/fullchat/${store_id}`)
+const storeChat = JSON.parse(sessionStorage.getItem(`chat${store_id}`));
+if(!storeChat){
+    fetch(`https://whatspro.herokuapp.com/api/fullchat/${store_id}`)
     .then(response => response.json())
     .then(response => {
         const store = response;
+        store.answers = store.answers?.filter((answer)=> answer.state === true);
+        store.employees = store.employees?.filter((employee)=> employee.state === true);
+        sessionStorage.setItem(`chat${store_id}`, JSON.stringify(store));
         console.log(store);
-        beginFunction(store);
+        setTimeout(()=>{
+            beginFunction(store);
+        }, store.chat.delayButtonAppear ?? 0);
     })
     .catch(err =>{
         console.log(err);
 });
+}else{
+    const store = storeChat;
+        store.answers = store.answers?.filter((answer)=> answer.state === true);
+        store.employees = store.employees?.filter((employee)=> employee.state === true);
+        console.log(store);
+        setTimeout(()=>{
+            beginFunction(store);
+        }, store.chat.delayButtonAppear ?? 0);
+}
 
 function beginFunction(store){//Chequeo si la tienda tiene el chat habilitado
     if(buttonCanBeShown(store)){
         //Detecto si es un primer ingreso a la tienda o no
         let userIdFlowy = JSON.parse(localStorage.getItem('userIdFlowy'));
         if(!userIdFlowy){
-            alert('Bienvenido por primera vez a la tienda!');
-            localStorage.setItem('userIdFlowy', JSON.stringify(true));
+            localStorage.setItem('userIdFlowy', JSON.stringify(`userChat${store_id}`));
         }
         renderButton(store.chat, userIdFlowy);
         initializeChat(store);
         let buttonWPP = document.querySelector('a.whatsapp');
         buttonWPP.addEventListener('click', renderChat);
         let crossIcon = document.querySelector('.flowy-chat-header .fa-times');
+        crossIcon.style.color = store.chat.fontColour;
         crossIcon.addEventListener('click', () =>{
             let chat = document.querySelector('.flowy-chat-whatsapp');
             chat.classList.add('flowy-no-visible');
@@ -38,25 +53,22 @@ function beginFunction(store){//Chequeo si la tienda tiene el chat habilitado
     //Chequeo si se puede mostrar el boton
 function buttonCanBeShown(store){
     let flag = true;
-    let availableEmployees = availableEmployeesToday(store);
+    let arrEmployeesTrue = trueEmployees(store);
     if(!store.chat.visible) flag = false;
     if(!store.state) flag =  false;
-    if(availableEmployees.length === 0 & store.answers.length == 0) flag = false;
+    let arrAnswersTrue = [];
+    store.answers.forEach((answer)=>{ if(answer.state) arrAnswersTrue.push(answer);});
+    if(arrEmployeesTrue.length == 0 && arrAnswersTrue.length == 0) flag = false;
     return flag;
 }
-    //Empleados disponibles para la hora actual
-function availableEmployeesToday(store){
-    let availableEmployees = [];
-    let today = new Date();
-    let minutesFromToday = today.getHours()*60 + today.getMinutes();
+function trueEmployees(store){
+    let arrEmployeeTrue = [];
     store.employees?.forEach((employee) => {
-        employee.schedule.forEach((schedule) =>{
-            if((schedule.end>= minutesFromToday) && (schedule.start<= minutesFromToday) && (schedule.day == today.getDay())){
-                availableEmployees.push(employee);
-            }
-        })
+        if(employee.state){
+            arrEmployeeTrue.push(employee)
+        }
     })
-    return availableEmployees;
+    return arrEmployeeTrue;
 }
     //Chequea si se ingreso de un celular o computadora
 function useMobile() {
@@ -77,13 +89,13 @@ function renderButton(chat, userIdFlowy){
     buttonWpp.style.left = `${chat.xPosition.left}px`;
     let iconWpp = document.querySelector('a.whatsapp i');
     iconWpp.style.color = chat.iconColour;
-    //TODO: Cartel cuando es primera vez que ingresa, usando userIdFlowy
+    //TODO: Cartel/Viñeta cuando es primera vez que ingresa, usando userIdFlowy
 }
 
 function initializeChat(store){
     let chat = document.querySelector('.flowy-chat-whatsapp');
     chat.style.background = store.chat.chatColour;
-    chat.style.color = store.chat.fontColour;
+    chat.style.color = `#000000`;
     if(!useMobile()){
         chat.style.bottom = `${store.chat.yPosition + 80}px`;
         if(store.chat.xPosition.right){
@@ -98,11 +110,12 @@ function initializeChat(store){
     let timeNow = new Date();
     let chatHeader = chat.querySelector('.flowy-chat-header h1');
     chatHeader.innerHTML = store.chat.title;
+    chatHeader.style.color = store.chat.fontColour;
+    chat.querySelector('.flowy-chat-header').style.background = store.chat.headerColour;
     let chatContent = chat.querySelector('.flowy-chat-body');
     chatContent.innerHTML = `<div class='flowy-chat-banner-chat'>Chat desarrollado por <strong>WhatsPRO</strong></div>
                             <div class="flowy-chat-store">
-                                <p class="flowy-chat-item-store">👋 Hola! Bienvenido a ${store.name},
-                                ¿En qué podemos ayudarte?</p>
+                                <p class="flowy-chat-item-store">${store.chat.description}</p>
                                 <p class="meta"><time datetime="${timeNow.getFullYear()}">${("0"+ timeNow.getHours()).slice(-2)}:${("0"+ timeNow.getMinutes()).slice(-2)}</time></p>
                             </div>`;
     renderOptions(store);
@@ -116,12 +129,15 @@ function renderOptions(store){
         let timeNow = new Date();
         let answersHTML = '';
         store.answers?.forEach((answer, idx)=>{
-            answersHTML += `<p class="flowy-chat-item-client flowy-answer-reply" id="answer${idx}">${answer.question}</p>`;
+                answersHTML += `<p class="flowy-chat-item-client flowy-answer-reply" id="answer${idx}">${answer.question}</p>`;
         });
-        let availableEmployees = availableEmployeesToday(store);
-        if(availableEmployees){
-            employeesClient = `<p class="flowy-chat-item-client" id="showEmployees">Hablar con un representate</p>`;
+        let arrTrueEmployees = trueEmployees(store);
+        if(arrTrueEmployees.length > 0){
+            employeesClient = `<p class="flowy-chat-item-client" id="showEmployees">Hablar con un asesor</p>`;
+        } else{
+            employeesClient = '';
         }
+        if(answersHTML.length > 0 || employeesClient.length > 0){
         chatContent.innerHTML += `<div class="flowy-chat-client">
                                 <p class="flowy-choice-option" style="text-align: right">Seleccione una opcion...</p>
                                 <div>`
@@ -131,8 +147,9 @@ function renderOptions(store){
                                 <p class="meta-client"><time datetime="${timeNow.getFullYear()}">${("0"+ timeNow.getHours()).slice(-2)}:${("0"+ timeNow.getMinutes()).slice(-2)}</time></p>
                             </div>`;
         addEventToClientOptions(store);
+        }
         chatContent.scrollTop = chatContent.scrollHeight;
-    } , 5000)
+    } , 4000)
 }
 
 function renderChat(){
@@ -164,24 +181,49 @@ function renderChat(){
 function addEventToClientOptions(store){
     let answers = document.querySelectorAll('.flowy-answer-reply');
     if(answers.length > store.answers.length) answers = [].slice.call(answers, -store.answers.length);
+    if(store.answers.length > 0){
     answers?.forEach((answer, idx) =>{
-        answer.addEventListener('click', (e)=>{
+            answer.addEventListener('click', (e)=>{
+                let timeNow = new Date();
+                let chat = document.querySelector('.flowy-chat-whatsapp');
+                let chatContent = chat.querySelector('.flowy-chat-body');
+                let options = chatContent.querySelectorAll('.flowy-chat-client');
+                options[options.length - 1].remove();
+                chatContent.innerHTML += `<div class="flowy-chat-client">
+                                            <div>
+                                            <p class="flowy-chat-item-client flowy-answer-reply" id="answer${idx}">${store.answers[idx].question}</p>
+                                            </div>
+                                            <p class="meta-client"><time datetime="${timeNow.getFullYear()}">${("0"+ timeNow.getHours()).slice(-2)}:${("0"+ timeNow.getMinutes()).slice(-2)}</time></p>
+                                        </div>`;
+                chatContent.scrollTop = chatContent.scrollHeight;
+                renderReplies(idx, store);
+                e.preventDefault();
+                e.stopPropagation();
+            })
+    })
+    }
+    let showEmployees = document.querySelector('#showEmployees');
+    if(showEmployees){
+        showEmployees.addEventListener('click', (e)=>{
             let timeNow = new Date();
             let chat = document.querySelector('.flowy-chat-whatsapp');
             let chatContent = chat.querySelector('.flowy-chat-body');
             let options = chatContent.querySelectorAll('.flowy-chat-client');
             options[options.length - 1].remove();
+            if(store.employees.length > 1){
             chatContent.innerHTML += `<div class="flowy-chat-client">
-                                        <div>
-                                            <p class="flowy-chat-item-client flowy-answer-reply" id="answer${idx}">${store.answers[idx].question}</p>
-                                        </div>
-                                        <p class="meta-client"><time datetime="${timeNow.getFullYear()}">${("0"+ timeNow.getHours()).slice(-2)}:${("0"+ timeNow.getMinutes()).slice(-2)}</time></p>
-                                    </div>`;
-            chatContent.scrollTop = chatContent.scrollHeight;
-            renderReplies(idx, store);
-            e.preventDefault();
+                                            <div>
+                                                <p class="flowy-chat-item-client" id="showEmployees">Hablar con un asesor</p>
+                                            </div>
+                                            <p class="meta-client"><time datetime="${timeNow.getFullYear()}">${("0"+ timeNow.getHours()).slice(-2)}:${("0"+ timeNow.getMinutes()).slice(-2)}</time></p>
+                                        </div>`;
+                }
+                chatContent.scrollTop = chatContent.scrollHeight;
+                renderEmployees(store);
+                e.preventDefault();
+                e.stopPropagation();
         })
-    })
+    }
 }
 function renderReplies(idx, store){
     let chat = document.querySelector('.flowy-chat-whatsapp');
@@ -197,7 +239,7 @@ function renderReplies(idx, store){
         points[points.length - 1].remove();
         chatContent.innerHTML += `<div class="flowy-chat-store">
                                 <p class="flowy-chat-item-store">${store.answers[idx].reply}</p>
-                                <p class="meta"><time datetime="${timeNow.getFullYear()}">${timeNow.getHours()}:${timeNow.getMinutes()}</time></p>
+                                <p class="meta"><time datetime="${timeNow.getFullYear()}">${("0"+ timeNow.getHours()).slice(-2)}:${("0"+ timeNow.getMinutes()).slice(-2)}</time></p>
                             </div>`;
         store.answers.splice(idx, 1);
         renderOptions(store);
@@ -205,5 +247,155 @@ function renderReplies(idx, store){
     }, 3000)
 }
 function renderEmployees(store){
-    
+    if(store.employees.length == 1){
+        renderOneEmployee(store.employees[0], store);
+    } else{
+        let chat = document.querySelector('.flowy-chat-whatsapp');
+        let chatContent = chat.querySelector('.flowy-chat-body');
+        let timeNow = new Date();
+        chatContent.innerHTML += `<div class="flowy-chat-store">
+                                <p class="flowy-chat-item-store">...</p>
+                            </div>`; 
+        chatContent.scrollTop = chatContent.scrollHeight;
+        setTimeout(() =>{
+            chatContent.scrollTop = chatContent.scrollHeight;
+            let points = chatContent.querySelectorAll('.flowy-chat-store');
+            points[points.length - 1].remove();
+            let employeesHTML = '';
+            store.employees.forEach((employee, idx) => {
+                if(isWorking(employee)){//Estan en linea
+                    employeesHTML += `<p class="flowy-chat-item-store flowy-chat-employee-item id="em${idx}">
+                                                <img src="${employee.avatar}">
+                                                ${employee.name} - ${employee.role} 
+                                                <i>(conectado)</i>
+                                    </p>`;
+                }else if(employee.allowOutOfScheduleMessage){
+                    employeesHTML += `<p class="flowy-chat-item-store flowy-chat-employee-item id="em${idx}">
+                                        <img src="${employee.avatar}">
+                                        ${employee.name} - ${employee.role} 
+                                        <i>(desconectado)</i>
+                                        </p>`;
+                }
+                else{
+                    employeesHTML += `<p class="flowy-chat-item-store flowy-chat-employee-item flowy-employee-unavailable id="em${idx}">
+                                        <img src="${employee.avatar}">
+                                        ${employee.name} - ${employee.role} 
+                                        <i>(desconectado)</i>
+                                        </p>`;
+                }
+            });
+            chatContent.innerHTML += `<div class="flowy-chat-store">`
+                                        + employeesHTML
+                                        + `<p class="meta"><time datetime="${timeNow.getFullYear()}">${("0"+ timeNow.getHours()).slice(-2)}:${("0"+ timeNow.getMinutes()).slice(-2)}</time></p>
+                                    </div>`;
+        addEventToWorkers(store);
+        chatContent.scrollTop = chatContent.scrollHeight;
+    }, 3000)
+    }
+}
+
+function isWorking(employee){
+    let today = new Date();
+    let flag = false;
+    let minutesFromToday = today.getHours()*60 + today.getMinutes();
+    employee.schedule.forEach((schedule) =>{
+        if((schedule.end>= minutesFromToday) && (schedule.start<= minutesFromToday) && (schedule.day == today.getDay())){
+            flag = true;
+        }
+    })
+    return flag;
+} 
+
+function addEventToWorkers(store){
+    let chat = document.querySelector('.flowy-chat-whatsapp');
+    let employees = chat.querySelectorAll('.flowy-chat-employee-item');
+    employees.forEach((employee, idx) => {
+        employee.addEventListener('click', (e)=>{
+            renderOneEmployee(store.employees[idx], store);
+        })
+    })
+}
+function renderOneEmployee(employee, store){
+    let chat = document.querySelector('.flowy-chat-whatsapp');
+    const previousChatBody = chat.querySelector('.flowy-chat-body').innerHTML;
+    const chatHeader = chat.querySelector('.flowy-chat-header');
+    const previousChatHeader = chatHeader.innerHTML;
+    chatHeader.classList.add('flowy-employee-main-header');
+    chatHeader.innerHTML = `<i class="fas fa-chevron-left"></i>
+                            <div class="flowy-employee-main-chat">
+                                <img class="flowy-employee-main-chat-avatar" src="${employee.avatar}">
+                                <div class="flowy-employee-main-chat-data">
+                                    <h2 class="flowy-employee-main-chat-name">${employee.name}</h2>
+                                    <p class="flowy-employee-main-chat-role">${employee.role}</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-times"></i>`;
+    let crossIcon = chat.querySelector('.flowy-chat-header .fa-times');
+    crossIcon.style.color = store.chat.fontColour;
+    let arrowIcon = chat.querySelector('.flowy-chat-header .fa-chevron-left');
+    arrowIcon.style.color = store.chat.fontColour;
+    arrowIcon.style.display = 'block';
+    let buttonWPP = document.querySelector('a.whatsapp');
+    crossIcon.addEventListener('click', () =>{
+        let chat = document.querySelector('.flowy-chat-whatsapp');
+        chat.classList.add('flowy-no-visible');
+        buttonWPP.style.display = '';
+    })
+    let timeNow = new Date();
+    let chatContent = chat.querySelector('.flowy-chat-body');
+    if(isWorking(employee)){
+        chatContent.innerHTML = `<div class='flowy-chat-banner-chat'>Chat desarrollado por <strong>WhatsPRO</strong></div>
+                            <div class="flowy-chat-store">
+                                <p class="flowy-chat-item-store">${employee.welcomeMessage}</p>
+                                <p class="meta"><time datetime="${timeNow.getFullYear()}">${("0"+ timeNow.getHours()).slice(-2)}:${("0"+ timeNow.getMinutes()).slice(-2)}</time></p>
+                            </div>`;
+                        } else{
+        chatContent.innerHTML = `<div class='flowy-chat-banner-chat'>Chat desarrollado por <strong>WhatsPRO</strong></div>
+        <div class="flowy-chat-store">
+        <p class="flowy-chat-item-store">${employee.outMessage}</p>
+        <p class="meta"><time datetime="${timeNow.getFullYear()}">${("0"+ timeNow.getHours()).slice(-2)}:${("0"+ timeNow.getMinutes()).slice(-2)}</time></p>
+        </div>`;
+    }
+    if(isWorking(employee) || employee.allowOutOfScheduleMessage){
+        let chatToWpp = chat.querySelector('.flowy-send');
+        chatToWpp.classList.remove('flowy-no-visible');
+        const sendButton = chat.querySelector('.flowy-send a');
+        sendButton.href = `https://wa.me/${employee.phoneNumber.prefix}${employee.phoneNumber.phoneNumber}`;
+        const chatToWppInput = chat.querySelector('.flowy-send input');
+        chatToWppInput.addEventListener('keyup', (e)=>{
+            let text = encodeURI(chatToWppInput.value);
+            sendButton.href=`https://wa.me/${employee.phoneNumber.prefix}${employee.phoneNumber.phoneNumber}?text=${text}`;
+        })
+    }
+    addEventToArrowEmployee(previousChatBody, previousChatHeader, store);
+}
+
+function addEventToArrowEmployee(previousChatBody, previousChatHeader, store){
+    let chat = document.querySelector('.flowy-chat-whatsapp');
+    let arrowIcon = chat.querySelector('.flowy-chat-header .fa-chevron-left');
+    arrowIcon.addEventListener('click', (e)=>{
+        let chatToWpp = chat.querySelector('.flowy-send');
+        chatToWpp.classList.add('flowy-no-visible');
+        renderPreviousChat(previousChatBody,previousChatHeader,store);
+        arrowIcon.style.display = 'none';
+    })
+}
+
+function renderPreviousChat(previousChatBody, previousChatHeader, store){
+    let chat = document.querySelector('.flowy-chat-whatsapp');
+    const chatHeader = chat.querySelector('.flowy-chat-header');
+    const newChatBody = chat.querySelector('.flowy-chat-body');
+    chatHeader.classList.remove('flowy-employee-main-header');
+    newChatBody.innerHTML = previousChatBody;
+    chatHeader.innerHTML = previousChatHeader;
+    newChatBody.scrollTop = newChatBody.scrollHeight;
+    addEventToWorkers(store);
+    let crossIcon = document.querySelector('.flowy-chat-header .fa-times');
+    crossIcon.style.color = store.chat.fontColour;
+    let buttonWPP = document.querySelector('a.whatsapp');
+    crossIcon.addEventListener('click', () =>{
+        let chat = document.querySelector('.flowy-chat-whatsapp');
+        chat.classList.add('flowy-no-visible');
+        buttonWPP.style.display = '';
+    })
 }
