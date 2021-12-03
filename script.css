@@ -406,13 +406,16 @@ p.flowy-choice-option{
   color: #F9F9F9;
   font-size: 0.9em;
 }
-.flowy-send input{
+.flowy-send textarea{
     width: 80vw;
     border: none;
     border-radius: 0.5em 0em 0em 0.5em;
     box-shadow: 0px 4px 10px darkgrey;
     padding: 0.25em;
     padding-left: 1em;
+    height: 2em;
+    max-height: 4em;
+    resize: none;
 }
 @media screen and (min-width: 700px) {
   .flowy-chat-whatsapp{
@@ -443,7 +446,7 @@ p.flowy-choice-option{
     border-radius: 0em 0em 1em 1em;
     align-self: center;
   }
-  .flowy-send input{
+  .flowy-send textarea{
     max-width: 290px;
   }
   

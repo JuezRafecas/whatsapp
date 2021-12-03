@@ -149,7 +149,7 @@ function renderOptions(store){
         addEventToClientOptions(store);
         }
         chatContent.scrollTop = chatContent.scrollHeight;
-    } , 4000)
+    } , 2000)
 }
 
 function renderChat(){
@@ -244,7 +244,7 @@ function renderReplies(idx, store){
         store.answers.splice(idx, 1);
         renderOptions(store);
         chatContent.scrollTop = chatContent.scrollHeight;
-    }, 3000)
+    }, 2000)
 }
 function renderEmployees(store){
     if(store.employees.length == 1){
@@ -290,7 +290,7 @@ function renderEmployees(store){
                                     </div>`;
         addEventToWorkers(store);
         chatContent.scrollTop = chatContent.scrollHeight;
-    }, 3000)
+    }, 2000)
     }
 }
 
@@ -361,7 +361,8 @@ function renderOneEmployee(employee, store){
         chatToWpp.classList.remove('flowy-no-visible');
         const sendButton = chat.querySelector('.flowy-send a');
         sendButton.href = `https://wa.me/${employee.phoneNumber.prefix}${employee.phoneNumber.phoneNumber}`;
-        const chatToWppInput = chat.querySelector('.flowy-send input');
+        const chatToWppInput = chat.querySelector('.flowy-send textarea');
+        chatToWppInput.value = '';
         chatToWppInput.addEventListener('keyup', (e)=>{
             let text = encodeURI(chatToWppInput.value);
             sendButton.href=`https://wa.me/${employee.phoneNumber.prefix}${employee.phoneNumber.phoneNumber}?text=${text}`;
